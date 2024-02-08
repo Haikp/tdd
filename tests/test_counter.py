@@ -53,13 +53,27 @@ class CounterTest(TestCase):
 
     def test_fetch_a_counter(self):
         """It should fetch a counter"""
-        result = self.client.post('counters/fetch')
+        result = self.client.post('/counters/fetch')
         self.assertEqual(result.status_code, status.HTTP_201_CREATED)
-        fetchedCounter = self.client.get('counters/fetch')
+        fetchedCounter = self.client.get('/counters/fetch')
         self.assertEqual(fetchedCounter.status_code, status.HTTP_200_OK)
         self.assertEqual(result.json.get('fetch'), fetchedCounter.json.get('fetch'))
 
     def test_false_fetch_counter(self):
         """It should return an error for false fetches"""
-        fetchedCounter = self.client.get('counters/fetch')
+        fetchedCounter = self.client.get('/counters/fetch')
         self.assertEqual(fetchedCounter.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_a_counter(self):
+        """It should delete a counter"""
+        result = self.client.post('/counters/delete')
+        self.assertEqual(result.status_code, status.HTTP_201_CREATED)
+        deleteCounter = self.client.delete('/counters/delete')
+        self.assertEqual(deleteCounter.status_code, status.HTTP_204_NO_CONTENT)
+        fetchCounter = self.client.get('/counters/delete')
+        self.assertEqual(fetchCounter.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_false_delete_a_counter(self):
+        """It should return an error for false delete"""
+        deleteCounter = self.client.delete('/counters/fetch')
+        self.assertEqual(deleteCounter.status_code, status.HTTP_404_NOT_FOUND)
