@@ -23,15 +23,6 @@ jobs:
         python -m pip install --upgrade pip |
         pip install -r requirements.txt
 
-    #Replace YOUR_SNYK_TOKEN with you actual snyk token
-    #token unique per individual from https://snyk.io
-    - name: Security Scan with Snyk
-      run: |
-        pip install snyk
-        snyk auth YOUR_SNYK_TOKEN
-        snyk test
-
-
     - name: Lint with flake8
       run:
         flake8 src --count --select=E9,F63,F7,F82 --show-source --statistics |
@@ -40,3 +31,9 @@ jobs:
     - name: Run unit tests with nose
       run:
         nosetests -v --with-spec --spec-color --with-coverage --cover-package=app
+
+    - name: Save test coverage artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage-report
+        path: coverage.xml
